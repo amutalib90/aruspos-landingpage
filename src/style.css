@@ -1,0 +1,216 @@
+@import "tailwindcss";
+
+/* ArusPay Brand Guideline V1.0 */
+@theme {
+  --font-serif: "Urbanist", sans-serif;
+  --font-sans: "Urbanist", sans-serif;
+  --font-mono: "Urbanist", sans-serif;
+
+  --color-ink: #15231b; /* Forest — primary text / dark surfaces */
+  --color-ink-soft: #1d3327; /* Forest 2 — quieter dark surface */
+  --color-cream: #fbf7ee; /* Cream — background */
+  --color-cream-deep: #f2ead9; /* deeper cream, for cards on cream */
+  --color-moss: #4c7a50; /* Moss — primary / brand */
+  --color-moss-dark: #3a5f3e; /* Moss Dark — brand hover / action */
+  --color-sage: #d6e9c6; /* Leaf Light — tint / soft fills */
+  --color-sage-deep: #a3cb8b; /* Leaf — secondary / highlight */
+  --color-amber: #dda24f; /* Gold — accent CTA on dark, used sparingly */
+  --color-amber-deep: #c78c3c; /* Gold, deeper hover state */
+  --color-text-dim: #6e7566; /* Stone — secondary text */
+  --color-line: #e4dcc8; /* Line — borders / dividers */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: "Urbanist", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@layer utilities {
+  .wrap {
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 32px;
+  }
+
+  @media (max-width: 640px) {
+    .wrap {
+      padding-inline: 20px;
+    }
+  }
+
+  .mono {
+    font-family: "Urbanist", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Urbanist", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-grid-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(251, 247, 238, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251, 247, 238, 0.045) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: radial-gradient(ellipse 70% 70% at 60% 20%, black, transparent 75%);
+    pointer-events: none;
+  }
+
+  .eyebrow-dash::before {
+    content: "";
+    width: 20px;
+    height: 1px;
+    background: var(--color-sage-deep);
+  }
+
+  .journey-track-line::before {
+    content: "";
+    position: absolute;
+    top: 23px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  @media (max-width: 900px) {
+    .journey-track-line::before {
+      display: none;
+    }
+  }
+
+  .receipt-tape::before,
+  .receipt-tape::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: repeating-linear-gradient(-45deg, var(--color-ink) 0 6px, transparent 6px 12px);
+  }
+
+  .receipt-tape::before {
+    top: -5px;
+  }
+
+  .receipt-tape::after {
+    bottom: -5px;
+  }
+
+  /* Scroll-reveal: toggled by the v-reveal directive */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Flowing "current" line — used in the Merchant OS engine diagram */
+  .flow-line {
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--color-moss) 0 10px,
+      transparent 10px 20px
+    );
+    background-size: 40px 2px;
+    animation: flow-move 1.4s linear infinite;
+  }
+
+  .flow-arrow {
+    animation: flow-pulse 1.8s ease-in-out infinite;
+  }
+
+  /* The animated "2026" badge in the footer */
+  .year-badge {
+    position: relative;
+    background: linear-gradient(90deg, var(--color-sage-deep), var(--color-amber), var(--color-sage-deep));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: year-shimmer 3.5s linear infinite;
+    font-weight: 700;
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+}
+
+@keyframes flow-move {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 40px 0;
+  }
+}
+
+@keyframes flow-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@keyframes year-shimmer {
+  to {
+    background-position: -200% center;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 122, 80, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(76, 122, 80, 0);
+  }
+}
