@@ -88,6 +88,7 @@ body {
     background-image: linear-gradient(rgba(251, 247, 238, 0.045) 1px, transparent 1px),
       linear-gradient(90deg, rgba(251, 247, 238, 0.045) 1px, transparent 1px);
     background-size: 46px 46px;
+    background-position: var(--grid-shift-x, 0px) var(--grid-shift-y, 0px);
     mask-image: radial-gradient(ellipse 70% 70% at 60% 20%, black, transparent 75%);
     pointer-events: none;
   }

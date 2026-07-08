@@ -1,5 +1,58 @@
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import AnimatedCounter from "./AnimatedCounter.vue";
+
+const heroRef = ref(null);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const DEFAULT_GLOW = { x: 78, y: 10 };
+const current = { gx: DEFAULT_GLOW.x, gy: DEFAULT_GLOW.y, sx: 0, sy: 0 };
+const target = { gx: DEFAULT_GLOW.x, gy: DEFAULT_GLOW.y, sx: 0, sy: 0 };
+let rafId = null;
+
+function applyStyle() {
+  const el = heroRef.value;
+  if (!el) return;
+  el.style.backgroundImage = `radial-gradient(ellipse 80% 60% at ${current.gx.toFixed(2)}% ${current.gy.toFixed(2)}%, rgba(221, 162, 79, 0.16), transparent 60%), linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-soft) 100%)`;
+  el.style.setProperty("--grid-shift-x", `${current.sx.toFixed(2)}px`);
+  el.style.setProperty("--grid-shift-y", `${current.sy.toFixed(2)}px`);
+}
+
+function tick() {
+  current.gx += (target.gx - current.gx) * 0.08;
+  current.gy += (target.gy - current.gy) * 0.08;
+  current.sx += (target.sx - current.sx) * 0.08;
+  current.sy += (target.sy - current.sy) * 0.08;
+  applyStyle();
+  rafId = requestAnimationFrame(tick);
+}
+
+function handleMouseMove(e) {
+  if (reduceMotion || !heroRef.value) return;
+  const rect = heroRef.value.getBoundingClientRect();
+  const relX = (e.clientX - rect.left) / rect.width;
+  const relY = (e.clientY - rect.top) / rect.height;
+  target.gx = Math.min(100, Math.max(0, relX * 100));
+  target.gy = Math.min(100, Math.max(0, relY * 100));
+  target.sx = (relX - 0.5) * 30;
+  target.sy = (relY - 0.5) * 30;
+}
+
+function handleMouseLeave() {
+  target.gx = DEFAULT_GLOW.x;
+  target.gy = DEFAULT_GLOW.y;
+  target.sx = 0;
+  target.sy = 0;
+}
+
+onMounted(() => {
+  applyStyle();
+  if (!reduceMotion) rafId = requestAnimationFrame(tick);
+});
+
+onBeforeUnmount(() => {
+  if (rafId) cancelAnimationFrame(rafId);
+});
 
 const lineItems = [
   { label: "Nasi Lemak Set ×2", price: "RM 24.00" },
@@ -18,8 +71,11 @@ const stats = [
 
 <template>
   <header
+    ref="heroRef"
     class="hero-grid-bg relative overflow-hidden pt-24 pb-15 text-cream bg-linear-to-b from-ink to-ink-soft"
-    style="background-image: radial-gradient(ellipse 80% 60% at 78% 10%, rgba(221, 162, 79, 0.14), transparent 60%), linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-soft) 100%)"
+    style="background-image: radial-gradient(ellipse 80% 60% at 78% 10%, rgba(221, 162, 79, 0.16), transparent 60%), linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-soft) 100%)"
+    @mousemove="handleMouseMove"
+    @mouseleave="handleMouseLeave"
   >
     <div class="wrap relative z-2 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-14 items-center">
       <div>
