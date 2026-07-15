@@ -1,5 +1,7 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
+import { useInViewOnce } from "../../composables/useInViewOnce.js";
+import { useReducedMotion } from "../../composables/useReducedMotion.js";
 
 const props = defineProps({
   target: { type: Number, required: true },
@@ -9,9 +11,8 @@ const props = defineProps({
   duration: { type: Number, default: 1400 },
 });
 
-const display = ref((0).toFixed(props.decimals));
-const rootEl = ref(null);
-let observer;
+const display = ref(formatNumber(0));
+const reduced = useReducedMotion();
 
 function formatNumber(value) {
   return value.toLocaleString("en-MY", {
@@ -21,37 +22,23 @@ function formatNumber(value) {
 }
 
 function animate() {
+  if (reduced.value) {
+    display.value = formatNumber(props.target);
+    return;
+  }
   const start = performance.now();
-  const from = 0;
-  const to = props.target;
 
   function tick(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / props.duration, 1);
+    const progress = Math.min((now - start) / props.duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    display.value = formatNumber(from + (to - from) * eased);
+    display.value = formatNumber(props.target * eased);
     if (progress < 1) requestAnimationFrame(tick);
   }
 
   requestAnimationFrame(tick);
 }
 
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animate();
-          observer.unobserve(rootEl.value);
-        }
-      });
-    },
-    { threshold: 0.4 }
-  );
-  if (rootEl.value) observer.observe(rootEl.value);
-});
-
-onUnmounted(() => observer?.disconnect());
+const rootEl = useInViewOnce(animate, { threshold: 0.4 });
 </script>
 
 <template>

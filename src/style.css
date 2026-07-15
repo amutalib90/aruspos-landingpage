@@ -1,23 +1,43 @@
 @import "tailwindcss";
 
-/* ArusPay Brand Guideline V1.0 */
+/* ─────────────────────────────────────────────────────────────
+   ArusPay Brand Guideline V1.0 — design tokens
+   Every color below is taken verbatim from the guideline.
+   ───────────────────────────────────────────────────────────── */
 @theme {
-  --font-serif: "Urbanist", sans-serif;
-  --font-sans: "Urbanist", sans-serif;
-  --font-mono: "Urbanist", sans-serif;
+  --font-sans: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
 
-  --color-ink: #15231b; /* Forest — primary text / dark surfaces */
-  --color-ink-soft: #1d3327; /* Forest 2 — quieter dark surface */
-  --color-cream: #fbf7ee; /* Cream — background */
-  --color-cream-deep: #f2ead9; /* deeper cream, for cards on cream */
+  /* Core palette */
+  --color-forest: #15231b; /* Forest — primary text / dark surfaces */
+  --color-forest-2: #1d3327; /* Forest 2 — quieter dark surface */
+  --color-cream: #fbf7ee; /* Cream — warm neutral surface */
   --color-moss: #4c7a50; /* Moss — primary / brand */
   --color-moss-dark: #3a5f3e; /* Moss Dark — brand hover / action */
-  --color-sage: #d6e9c6; /* Leaf Light — tint / soft fills */
-  --color-sage-deep: #a3cb8b; /* Leaf — secondary / highlight */
-  --color-amber: #dda24f; /* Gold — accent CTA on dark, used sparingly */
-  --color-amber-deep: #c78c3c; /* Gold, deeper hover state */
-  --color-text-dim: #6e7566; /* Stone — secondary text */
+  --color-leaf: #a3cb8b; /* Leaf — secondary / highlight */
+  --color-leaf-light: #d6e9c6; /* Leaf Light — tint / soft fills */
+  --color-gold: #dda24f; /* Gold — accent CTA on dark, sparingly */
+  --color-stone: #6e7566; /* Stone — secondary text */
   --color-line: #e4dcc8; /* Line — borders / dividers */
+
+  /* Semantic status (guideline p.5) */
+  --color-success-bg: #d6e9c6;
+  --color-success: #4c7a50;
+  --color-success-text: #3a5f3e;
+  --color-warning-bg: #f2e8d9;
+  --color-warning: #dda24f;
+  --color-warning-text: #956119;
+  --color-error-bg: #f5e2db;
+  --color-error: #b6593a;
+  --color-error-text: #773722;
+
+  /* Elevation — forest-tinted, never pure black */
+  --shadow-card: 0 1px 2px rgba(21, 35, 27, 0.04), 0 8px 24px -12px rgba(21, 35, 27, 0.12);
+  --shadow-lift: 0 2px 4px rgba(21, 35, 27, 0.05), 0 20px 40px -16px rgba(21, 35, 27, 0.18);
+  --shadow-device: 0 1px 2px rgba(21, 35, 27, 0.08), 0 48px 90px -32px rgba(21, 35, 27, 0.4);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html {
@@ -25,184 +45,188 @@ html {
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-ink);
-  font-family: "Urbanist", sans-serif;
+  background: #ffffff;
+  color: var(--color-forest);
+  font-family: var(--font-sans);
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-amber);
-  color: var(--color-ink);
+  background: var(--color-leaf-light);
+  color: var(--color-forest);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-amber);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
+  outline: 2px solid var(--color-moss);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 @layer utilities {
+  /* Layout */
   .wrap {
-    max-width: 1240px;
+    max-width: 1200px;
     margin-inline: auto;
-    padding-inline: 32px;
+    padding-inline: 24px;
   }
 
-  @media (max-width: 640px) {
+  @media (min-width: 768px) {
     .wrap {
-      padding-inline: 20px;
+      padding-inline: 40px;
     }
   }
 
-  .mono {
-    font-family: "Urbanist", sans-serif;
+  /* ── Type scale (guideline p.7) ─────────────────────────── */
+  .heading-1 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 1.4rem + 4.6vw, 4.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+  }
+
+  .heading-2 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 1.4rem + 1.9vw, 2.5rem);
+    line-height: 1.14;
+    letter-spacing: -0.018em;
+  }
+
+  .heading-3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(1.28rem, 1.1rem + 0.7vw, 1.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.012em;
+  }
+
+  .eyebrow {
     font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
+  }
+
+  .lede {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .caption {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  /* Fraunces — warmth for accent words & quotes only */
+  .accent-serif {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: -0.01em;
   }
 
   .tabular {
     font-variant-numeric: tabular-nums;
   }
 
-  h1,
-  h2,
-  h3 {
-    font-family: "Urbanist", sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
-  .hero-grid-bg::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: linear-gradient(rgba(251, 247, 238, 0.045) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(251, 247, 238, 0.045) 1px, transparent 1px);
-    background-size: 46px 46px;
-    background-position: var(--grid-shift-x, 0px) var(--grid-shift-y, 0px);
-    mask-image: radial-gradient(ellipse 70% 70% at 60% 20%, black, transparent 75%);
-    pointer-events: none;
-  }
-
-  .eyebrow-dash::before {
-    content: "";
-    width: 20px;
-    height: 1px;
-    background: var(--color-sage-deep);
-  }
-
-  .journey-track-line::before {
-    content: "";
-    position: absolute;
-    top: 23px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--color-line);
-  }
-
-  @media (max-width: 900px) {
-    .journey-track-line::before {
-      display: none;
-    }
-  }
-
-  .receipt-tape::before,
-  .receipt-tape::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background: repeating-linear-gradient(-45deg, var(--color-ink) 0 6px, transparent 6px 12px);
-  }
-
-  .receipt-tape::before {
-    top: -5px;
-  }
-
-  .receipt-tape::after {
-    bottom: -5px;
-  }
-
-  /* Scroll-reveal: toggled by the v-reveal directive */
+  /* ── Scroll reveal (v-reveal directive) ─────────────────── */
   .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(26px);
+    filter: blur(6px);
+    transition:
+      opacity 0.75s var(--ease-out-soft),
+      transform 0.75s var(--ease-out-soft),
+      filter 0.75s var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .reveal-scale {
+    transform: translateY(14px) scale(0.96);
   }
 
   .reveal.is-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+    filter: blur(0);
   }
 
-  /* Flowing "current" line — used in the Merchant OS engine diagram */
-  .flow-line {
-    background-image: repeating-linear-gradient(
-      90deg,
-      var(--color-moss) 0 10px,
-      transparent 10px 20px
-    );
-    background-size: 40px 2px;
-    animation: flow-move 1.4s linear infinite;
+  /* ── Micro-interactions ─────────────────────────────────── */
+  .card-lift {
+    transition:
+      transform 0.35s var(--ease-out-soft),
+      box-shadow 0.35s var(--ease-out-soft),
+      border-color 0.35s var(--ease-out-soft);
   }
 
-  .flow-arrow {
-    animation: flow-pulse 1.8s ease-in-out infinite;
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
   }
 
-  /* The animated "2026" badge in the footer */
-  .year-badge {
-    position: relative;
-    background: linear-gradient(90deg, var(--color-sage-deep), var(--color-amber), var(--color-sage-deep));
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: year-shimmer 3.5s linear infinite;
-    font-weight: 700;
+  .float-slow {
+    animation: float-y 7s ease-in-out infinite;
+  }
+
+  .float-slower {
+    animation: float-y 9.5s ease-in-out 1.2s infinite;
+  }
+
+  /* NFC / live pulse ring */
+  .pulse-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid var(--color-leaf);
+    animation: pulse-ring 2.2s var(--ease-out-soft) infinite;
   }
 
   .pulse-dot {
     animation: pulse-dot 2s ease-in-out infinite;
   }
+
+  /* QR scan line */
+  .scan-line {
+    animation: scan-y 2.4s ease-in-out infinite;
+  }
+
+  /* Logo marquee */
+  .marquee-track {
+    animation: marquee 32s linear infinite;
+  }
+
+  .marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  }
 }
 
-@keyframes flow-move {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 40px 0;
-  }
-}
-
-@keyframes flow-pulse {
+/* ── Keyframes ──────────────────────────────────────────────── */
+@keyframes float-y {
   0%,
   100% {
-    opacity: 0.35;
-    transform: translateX(0);
+    transform: translateY(0);
   }
   50% {
-    opacity: 1;
-    transform: translateX(3px);
+    transform: translateY(-10px);
   }
 }
 
-@keyframes year-shimmer {
-  to {
-    background-position: -200% center;
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  70%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
   }
 }
 
@@ -213,5 +237,76 @@ body {
   }
   50% {
     box-shadow: 0 0 0 6px rgba(76, 122, 80, 0);
+  }
+}
+
+@keyframes scan-y {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(74px);
+    opacity: 0.5;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes receipt-out {
+  from {
+    transform: translateY(-88%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ── Reduced motion: calm everything ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
   }
 }

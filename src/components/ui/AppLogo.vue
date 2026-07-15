@@ -4,7 +4,8 @@ import { useId } from "vue";
 defineProps({
   size: { type: [Number, String], default: 36 },
   wordmark: { type: Boolean, default: true },
-  wordmarkClass: { type: String, default: "text-cream" },
+  /** light — forest text on light surfaces; dark — cream text on dark surfaces */
+  tone: { type: String, default: "light" },
 });
 
 const uid = useId();
@@ -35,8 +36,12 @@ const markId = `logo-mark-${uid}`;
         </g>
       </g>
     </svg>
-    <span v-if="wordmark" class="font-medium text-xl" :class="wordmarkClass">
-      <span class="year-badge">ArusPOS</span>
+    <span
+      v-if="wordmark"
+      class="text-xl font-semibold tracking-tight"
+      :class="tone === 'dark' ? 'text-cream' : 'text-forest'"
+    >
+      Arus<span class="text-moss">POS</span>
     </span>
   </span>
 </template>
